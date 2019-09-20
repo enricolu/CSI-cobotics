@@ -1,0 +1,31 @@
+fileFormatVersion: 2
+guid: 4c77e143aa0c37d498d4c8d9dcbfb570
+PluginImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  iconMap:
+  - PiXYZ.Plugin.Unity.ImportSettings:  {fileID: 2800000, guid: 02b7941de60196f42b9ac90de26a2ce8, type: 3}
+  executionOrder: {}
+  isPreloaded: 0
+  isOverridable: 0
+  platformData:
+  - first:
+      Any: 
+    second:
+      enabled: 1
+      settings: {}
+  - first:
+      Editor: Editor
+    second:
+      enabled: 0
+      settings:
+        DefaultValueInitialized: true
+  - first:
+      Windows Store Apps: WindowsStoreApps
+    second:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
