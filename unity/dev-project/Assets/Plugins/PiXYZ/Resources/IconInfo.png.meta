@@ -88,12 +88,12 @@ TextureImporter:
     bones: []
     spriteID: 4fa4cafca25ce9e43be9d73928e95087
     vertices: []
-    indices: 
+    indices: ''
     edges: []
     weights: []
-  spritePackingTag: 
+  spritePackingTag: ''
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
+  userData: ''
+  assetBundleName: ''
+  assetBundleVariant: ''

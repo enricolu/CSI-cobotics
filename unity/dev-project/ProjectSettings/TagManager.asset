@@ -4,7 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Sensors
+  - sensor
+  - manipulator
+  - device
+  - ROSBridge
+  - user
   layers:
   - Default
   - TransparentFX
@@ -37,7 +41,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Spatial Awareness
   m_SortingLayers:
   - name: Default
     uniqueID: 0

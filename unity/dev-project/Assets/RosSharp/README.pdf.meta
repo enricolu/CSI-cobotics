@@ -1,9 +1,12 @@
 fileFormatVersion: 2
 guid: a59df4ed65efe4340af9becfdb425dd8
-timeCreated: 1522921690
-licenseType: Pro
-DefaultImporter:
+ScriptedImporter:
+  internalIDToNameTable: []
   externalObjects: {}
+  serializedVersion: 2
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+  script: {fileID: -586543377, guid: 34acb6faa25ad2e449371f4f9f7e498c, type: 3}
+  importSettings: {instanceID: 0}
+  rules: {instanceID: 0}

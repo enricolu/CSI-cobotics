@@ -3,7 +3,7 @@
 	Properties
 	{
 		[Header(Main Properties)]
-	[HDR]
+		[HDR]
 		_Color ("Color", Color) = (0,0,0,1)
 
 		[Toggle]

@@ -1,13 +1,15 @@
 fileFormatVersion: 2
-guid: 4c77e143aa0c37d498d4c8d9dcbfb570
+guid: 6d7ebc66ad563b95a128c2fafd6a306f
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
-  iconMap:
-  - PiXYZ.Import.ImportSettings:  {fileID: 2800000, guid: 02b7941de60196f42b9ac90de26a2ce8, type: 3}
+  iconMap: {}
   executionOrder: {}
+  defineConstraints: []
   isPreloaded: 0
   isOverridable: 0
+  isExplicitlyReferenced: 0
+  validateReferences: 1
   platformData:
   - first:
       Any: 
