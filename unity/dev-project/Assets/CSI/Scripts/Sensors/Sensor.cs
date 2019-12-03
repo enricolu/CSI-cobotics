@@ -8,8 +8,9 @@ namespace CSI.Sensors
 {
     public class Sensor : Device
     {
-        // Properties (made available to all subsequent behaviours)
+        // General sensing parameters
         [Header("Sensing Parameters")]
+
         [Tooltip("Effective sensor range.")]
         public float range = 4.0f;
         

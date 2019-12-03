@@ -326,7 +326,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 585281153989020222}
-  - component: {fileID: 7012931455539143224}
+  - component: {fileID: 1006035130532478642}
   - component: {fileID: 6984710961776571464}
   m_Layer: 0
   m_Name: Azure Kinect
@@ -351,26 +351,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7012931455539143224
-MonoBehaviour:
+--- !u!54 &1006035130532478642
+Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3427373712253714060}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4a07b89af670684fb0ec682aa981371, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wasUserWarned: 0
-  _path: D:/Git Repositories/csi-cobotics/unity/.packages/kinect-for-azure v5.obj
-  _importTime: 637104714606325379
-  _importDuration: 13276888
-  _lastWriteTime: 637104703452139394
-  _lastFileSize: 4463343
-  _importSettings: {fileID: 7683527623813001728}
-  _rules: {fileID: 0}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!114 &6984710961776571464
 MonoBehaviour:
   m_ObjectHideFlags: 0
