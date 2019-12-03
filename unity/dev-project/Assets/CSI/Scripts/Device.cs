@@ -6,8 +6,6 @@ using CSI;
 
 namespace CSI
 {
-    // Device type
-    public enum deviceMode { unknown, networked, emulated };
 
     public class Device : Entity
     {
@@ -17,13 +15,12 @@ namespace CSI
         public string model = "Unassigned";
         [Tooltip("Device Manufacturer.")]
         public string manufacturer = "Unassigned";
-        [Tooltip("Is the device real, or emulated?")]
-        public deviceMode mode = deviceMode.unknown;
 
+        /*
         // Before timeseries
         void Awake()
         {
-            AssignEntityType(EntityType.device);    // Override entity description as device
+
         }
 
         // Start is called before the first frame update
@@ -37,5 +34,6 @@ namespace CSI
         {
         
         }
+        */
     }
 }

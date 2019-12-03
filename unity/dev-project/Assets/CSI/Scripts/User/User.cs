@@ -9,7 +9,6 @@ namespace CSI.User
     // User-modes
     public enum handMode { right, left, ambidextrous };
 
-    [Serializable]
     public class User : Entity
     {
         // Operator properties 
@@ -21,13 +20,12 @@ namespace CSI.User
         [Tooltip("Dominant hand for interactions.")]
         public handMode dominantHand = handMode.right;      // Average hand dominance
 
-        private float modelHeight = 1.5f;
+        private float defaultHeight = 1.5f;
+        private float defaultWeight = 90;
 
         // Before timeseries
         void Awake()
         {
-            // Ensure the entity type is consistant
-            AssignEntityType(EntityType.user);
             // Scale the avatar geometry to the 'height' parameter
             ScaleOperatorGeometry();
         }
@@ -41,17 +39,19 @@ namespace CSI.User
         // Update is called once per frame
         void Update()
         {
-
+            ScaleOperatorGeometry(); // Scale the avatar geometry to the 'height' parameter
         }
 
+        // Scale the geometry of the avatar
         private void ScaleOperatorGeometry()
         {
             // Universal Scaler
-            float uScale = height / modelHeight;
+            float uScale = height / defaultHeight;
+            float wScale = weight / defaultWeight;
             // Dimensional scalars
-            float xScale = 1.0f;
+            float xScale = wScale;
             float yScale = 1.0f;
-            float zScale = 1.0f;
+            float zScale = wScale;
 
             // Scale the geometry
             transform.localScale = new Vector3(

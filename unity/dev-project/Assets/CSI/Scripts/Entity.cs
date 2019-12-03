@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using CSI;
 
 namespace CSI
 {
-    // Device types
-    public enum EntityType { generic, device, sensor, manipulator, user };
+    // Digital Twinning behaviours
+    public enum TwinMode { passive, emulated, networked };
 
     /*
      * Device description
@@ -15,21 +16,53 @@ namespace CSI
     public class Entity : MonoBehaviour
     {
         // Public properties (made available to all subsequent behaviours)
-        [Header("Overview")]
+        [Header("General Parameters")]
+        [Tooltip("Arbritrary designation")]
         public string name = "Unassigned";
-        public const EntityType type = EntityType.generic;
-        private int id = 0;                           // Unique reference
+        [Tooltip("Digital twinning mode; is the device real, emulated or passive?")]
+        public TwinMode twinBehaviour = TwinMode.passive;   // Does not transmit or recieve data
+
+        // Internal references
+        private int id = 0;                                 // Unique reference
 
         // Before timeseries
         void Awake()
         {
             // If not provided with an ID, assign unique ID
             if (0 == id)
-            {
                 id = GetInstanceID();
-            }
-            // Assign the device tag
-            AssignEntityType(type);
+
+            // No further setup for passive objects
+            if (twinBehaviour != TwinMode.passive)
+                return;
+
+            // Confirm the entity has a network interface
+            if (!HasNI())
+                Debug.LogError("[ERROR] Entity '" + name + "' has no network interface, please add and configure.");
+                return;
+
+        }
+        
+        // General update function
+        void Update()
+        {
+            Debug.Log("I '" + name + "' in " + twinBehaviour + " mode..");
+        }
+
+        /*
+         * Networking
+         */
+        // Check a network-interface exists
+        public bool HasNI()
+        {
+            if (GetNI() != null)
+                return true;
+            return false; 
+        }        
+        // Get the entities network interface
+        public NetworkInterface GetNI()
+        {
+            return this.gameObject.GetComponent<NetworkInterface>();
         }
 
         /*
@@ -59,20 +92,6 @@ namespace CSI
             {
                 AssignTagToChildren(child, tagString);
             }
-        }
-
-        /*
-         * Assignments
-         */
-        // Assign tag to device based on "type"
-        public void AssignEntityType(EntityType type)
-        {
-            /* 
-             * This function ensures that the device tag matches its type, in addition to any further actions.
-             */
-            
-            // Tag this device as the string "type"
-            this.tag = type.ToString();
         }
     }
 }

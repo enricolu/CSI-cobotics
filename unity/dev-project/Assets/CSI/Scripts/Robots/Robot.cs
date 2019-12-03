@@ -6,7 +6,7 @@ using CSI;
 namespace CSI.Robot
 {
     // Robot kinematic types
-    public enum robotType {serial, mobile, hybrid };
+    public enum dynamics {serial, mobile, hybrid };
 
     public class Robot : Device
     {
@@ -14,35 +14,39 @@ namespace CSI.Robot
         [Header("Robot Parameters")]
         // Parameters
         [Tooltip("The robot kinematic types")]
-        public robotType config = robotType.serial;
-        [Tooltip("RMS error tolerance")]
-        public float RMSErrorTolerance = 5.0f;  // mm
+        public dynamics config = dynamics.serial;
+        // [Tooltip("")]
+
 
         private bool activeInterface = false;        
-
-        /*
-         * Manipulators can be connected or disconnected to an associated network
-         */
 
         // Start is called before the first frame update
         void OnAwake()
         {
-            // Get the general connection interface
-            //if (this.gameObject.GetComponent<NetworkInterface>.IsNetworked())
-            //{
-            //    Debug.Log("Creating interfaces..");
-            //   CreateIOComponents(type);
-            //}
+
         }
 
         // Update is called once per frame
         void Update()
-        {        
+        {
             /*
-             * This script hands the creation of interfaces for the 
-             * robot.
-             * 
+             * This handles the update of the 'robot' digital twins
              */
+            switch (twinBehaviour)
+            {
+                case TwinMode.passive:
+
+                    return;
+                case TwinMode.emulated:
+
+                    return;
+                case TwinMode.networked:
+
+                    return;
+                default:
+                    Debug.Log("Twin mode not recognised for '" + name);
+                    return;
+            }
 
             // Get the general connection interface
             NetworkInterface networkBridge = this.gameObject.GetComponent<NetworkInterface>();
@@ -74,7 +78,7 @@ namespace CSI.Robot
         {
             switch (config)
             {
-                case (robotType.serial):
+                case (dynamics.serial):
                     // Create the joint state mirror
                     //this.gameObject.AddComponent<ROSConnector>();
                     break;

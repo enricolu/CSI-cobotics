@@ -10,8 +10,14 @@ namespace CSI
     // Communication types
     public enum networkType { ROS, ROS2, TCP };
 
+    /*
+     * 
+     * Generic Network Interface class
+     * 
+     */
+
     [Serializable]
-    [RequireComponent(typeof(Device))]
+    [RequireComponent(typeof(Entity))]
     public class NetworkInterface : MonoBehaviour
     {
         [Header("Network Properties")]
@@ -45,30 +51,36 @@ namespace CSI
         // Update is called once per frame
         void Update()
         {
+            CheckConnectionStatus();
+        }
+        
+        // On NI destruction
+        void OnDestroy()
+        {
+            Disconnect();
+        }
+
+        /*
+         * Connection properties
+         * 
+         */
+        // Checks the interfaces for connection status changes
+        public void CheckConnectionStatus()
+        {
             // Provide the new/reconnecting logic
-            if (isEnabled && !activeConnection)
+            if (isEnabled && !IsConnected())
             {
                 Connect();
                 activeConnection = true;
             }
-            else if (!isEnabled && activeConnection) 
+            else if (!isEnabled && IsConnected())
             {
                 Disconnect();
                 activeConnection = false;
             }
         }
-        
-        /*
-         * Connection properties
-         * 
-         */
-        // Check if the connection is active
-        public bool IsConnected()
-        {
-            return activeConnection;
-        }
         // Connect to the selected network
-        void Connect()
+        public void Connect()
         {
             Debug.Log("Creating connector of type '" + deviceNetwork + "' for device '" + this.name + "'...");
             
@@ -96,12 +108,17 @@ namespace CSI
             //Debug.Log("...connection created.");
         }
         // Disconnect from the selected network
-        void Disconnect()
+        public void Disconnect()
         {
             Debug.Log("Destroying '" + deviceNetwork + "' connection on device '" + this.name + "'...");
             // Destroy the connections
             Destroy(this.gameObject.GetComponent<ROSInterface>());
             Destroy(this.gameObject.GetComponent<ROS2Interface>());
+        }        
+        // Check if the connection is active
+        public bool IsConnected()
+        {
+            return activeConnection;
         }
     }
 }
