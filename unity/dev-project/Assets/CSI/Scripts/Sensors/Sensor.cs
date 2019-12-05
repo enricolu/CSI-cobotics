@@ -15,7 +15,7 @@ namespace CSI.Sensors
         public float range = 4.0f;
 
         // Internal references
-        private TwinType twinClass = TwinType.sensor;
+        private const TwinType twinClass = TwinType.sensor;
 
         /*
          * Component behaviours
@@ -26,7 +26,7 @@ namespace CSI.Sensors
             /*
              * This handles the update of the 'sensor' digital twins
              */
-            UpdateNetworkingBehaviour();
+            UpdateTwinBehaviour();
 
             Debug.Log("Type: " + twinClass.ToString());
 

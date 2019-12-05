@@ -25,7 +25,9 @@ namespace CSI
 
         // Internal references
         private int id = 0;                                 // Unique reference
-        private TwinType twinClass = TwinType.none;
+        private TwinMode priorBehaviour = TwinMode.passive; // Memory of previous mode
+        private const TwinType twinClass = TwinType.none;
+
         /*
          * Component behaviours
          */
@@ -35,6 +37,11 @@ namespace CSI
             // If not provided with an ID, assign unique ID
             if (0 == id)
                 id = GetInstanceID();
+        }
+        // General update function
+        void Update()
+        {
+            Debug.Log("[" + this.name + "] in " + twinBehaviour + " mode..");
 
             // Confirm the entity has a network interface
             if (!HasNetworkInterface() && twinBehaviour != TwinMode.passive)
@@ -43,57 +50,14 @@ namespace CSI
                 twinBehaviour = TwinMode.passive;
                 return;
             }
-        }
-        // General update function
-        void Update()
-        {
-            Debug.Log("[" + this.name + "] in " + twinBehaviour + " mode..");
-            // Update behaviour if needed
-            if(HasNetworkInterface())
-                UpdateNetworkingBehaviour();
 
-            // No further action
+            // Check if the "Twin behaviour" has changed and create and new interfaces
+            UpdateTwinBehaviour();
         }
 
-        /*
-         * General
-         */
-        // This function returns the twin class of the object
-        public TwinType GetTwinType()
-        {
-            return twinClass;
-        }
         /*
          * Networking
          */
-        // Check for changes in networking settings
-        public void UpdateNetworkingBehaviour()
-        {
-            // Sanity check
-            NetworkInterface EntityNI = GetComponent<NetworkInterface>();
-
-            switch (twinBehaviour)
-            {
-                case TwinMode.passive:
-                    // Remove if present
-                    if (EntityNI.Exists())
-                        EntityNI.Remove();  // Remove any existing connection
-                    break;
-                case TwinMode.emulated:
-                    // Create if not present
-                    if (!EntityNI.Exists())
-                        EntityNI.New();     // Create a new connection
-                    break;
-                case TwinMode.networked:
-                    // Create if not present
-                    if (!EntityNI.Exists())
-                        EntityNI.New();     // Create a new connection
-                    break;
-                default:
-                    Debug.Log("[" + this.name + "] Twin mode not recognised");
-                    return;
-            }
-        }
         // Check if the network interface exists
         public bool HasNetworkInterface()
         {
@@ -101,6 +65,80 @@ namespace CSI
                 return true;
             return false;
         }
+
+        /*
+         * Twinning functions
+         */
+        // Update procedure for twin interfaces
+        public void UpdateTwinBehaviour()
+        {
+            // Detect if the behaviour has changed
+            if (twinBehaviour == priorBehaviour)
+                return;
+
+            // ======= Behaviour has changed ======
+            if (twinBehaviour == TwinMode.passive)              // To an inactive status
+            {
+                // Remove connection object if present
+                if (GetComponent<NetworkInterface>().Exists())
+                {
+                    GetComponent<NetworkInterface>().Remove();  // Remove any existing connection
+                }
+                // Destroy twin interface components
+                DestroyTwinInterface();  
+            }            
+            else if (priorBehaviour == TwinMode.passive)        // From inactive status
+            {
+                // Create new connection object if not present
+                if (!GetComponent<NetworkInterface>().Exists())
+                {
+                    GetComponent<NetworkInterface>().New();     // Create a new connection
+                }
+                // Create a new twin interface using the network interface
+                CreateTwinInterface();
+            }
+            // Define the previous behaviour as the new behaviour
+            priorBehaviour = twinBehaviour;
+        }
+        // Create the interfaces depending on twin type
+        private void CreateTwinInterface()
+        {            
+            switch (twinBehaviour)
+            {
+                case TwinMode.passive:
+                    return;
+                case TwinMode.emulated:
+                    CreateEmulationInterface();
+                    return;
+                case TwinMode.networked:
+                    CreateNetworkingInterface();
+                    return;
+                default:
+                    Debug.Log("[" + this.name + "] Unable to generate twin interfaces: unknown twin-mode.");
+                    return;
+            }
+        }
+        // Create the interfaces depending on twin type
+        private void DestroyTwinInterface()
+        {
+
+        }
+        // Get the objects twin class
+        public TwinType GetTwinType()
+        {
+            return twinClass;
+        }
+        // Create the interfaces necessary for emulation
+        private void CreateEmulationInterface()
+        {
+            Debug.LogError("[" + this.name + "] Has no emulated-twin interface.");
+        }
+        // Create the interfaces necessary for networking
+        private void CreateNetworkingInterface()
+        {
+            Debug.LogError("[" + this.name + "] Has no networked-twin interface.");
+        }
+
         /*
          * Heirarchy transversal
          */
@@ -110,7 +148,7 @@ namespace CSI
             // Check if parent exists
             if (member.parent == null)
                 Debug.LogWarning("Unable to find " + tagString + " transform.");
-                return null;
+            return null;
 
             // Recursively check the parent
             if (member.tag != tagString)

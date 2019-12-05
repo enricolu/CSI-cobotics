@@ -243,7 +243,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5769013118878510854}
   - component: {fileID: -6738880210621719405}
-  - component: {fileID: 4020744981553496327}
+  - component: {fileID: 473347395281635073}
   m_Layer: 0
   m_Name: Kinect Xbox 360 V1
   m_TagString: sensor
@@ -283,7 +283,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &4020744981553496327
+--- !u!114 &473347395281635073
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -292,11 +292,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6378895038244138151}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c762d0c1efd23a249b354daa9317e6e0, type: 3}
+  m_Script: {fileID: 11500000, guid: 4838f0751e23503449868ea4ed4ba515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Kinect Sensor
-  model: Xbox 360 v1
+  name: Xbox 360 Kinect
+  twinBehaviour: 0
+  model: Version One
   manufacturer: Microsoft
   range: 4
 --- !u!1 &6824407805388823447

@@ -327,7 +327,7 @@ GameObject:
   m_Component:
   - component: {fileID: 585281153989020222}
   - component: {fileID: 1006035130532478642}
-  - component: {fileID: 6984710961776571464}
+  - component: {fileID: 7412895747119495558}
   m_Layer: 0
   m_Name: Azure Kinect
   m_TagString: sensor
@@ -367,7 +367,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6984710961776571464
+--- !u!114 &7412895747119495558
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -376,11 +376,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3427373712253714060}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c762d0c1efd23a249b354daa9317e6e0, type: 3}
+  m_Script: {fileID: 11500000, guid: 4838f0751e23503449868ea4ed4ba515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   name: Azure Kinect
-  model: Kinect for Azure
+  twinBehaviour: 0
+  model: Azure 2.0
   manufacturer: Microsoft
   range: 4
 --- !u!1 &3717876817721063846

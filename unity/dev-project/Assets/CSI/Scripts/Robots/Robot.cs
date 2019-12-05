@@ -11,13 +11,11 @@ namespace CSI.Robot
     public class Robot : Device
     {
         // General robot parameters
-        [Header("Robot Parameters")]
-        // Parameters
-        [Tooltip("The robot kinematic types")]
-        public dynamicMode dynamicBehaviour = dynamicMode.serial;
+        [Header("Generic robot parameters")]
 
         // Internal references
-        private TwinType twinClass = TwinType.robot;
+        private const TwinType twinClass = TwinType.robot;
+        private const dynamicMode dynamicBehaviour = dynamicMode.other;
 
         /*
          * Component behaviours
@@ -26,9 +24,8 @@ namespace CSI.Robot
         void Update()
         {
             // Confirm the objects connection status
-            UpdateNetworkingBehaviour();
+            UpdateTwinBehaviour();
 
-            //CreateNIinterfaces();
         }
 
 
@@ -38,58 +35,9 @@ namespace CSI.Robot
          */
         private void Setup()
         {
-            //SetTwinClass(TwinClass.robot);
+
         }
         
-        
-        private void CreateNIinterfaces()
-        {
-            /*
-             * Assemble the interfaces for a given robot configuration
-             */
-
-            // Robot network interface
-            NetworkInterface robotNI = gameObject.GetComponent<NetworkInterface>();
-
-            switch (dynamicBehaviour)
-            {
-                case (dynamicMode.serial):
-                    CreateNetworkComponents_Serial(robotNI);
-                    break;
-
-                case (dynamicMode.mobile):
-                    CreateNetworkComponents_Mobile(robotNI);
-                    break;
-
-                default:
-                    Debug.LogError("[" + this.name + "] Dynamic configuration '" + dynamicBehaviour.ToString() + "' not recognised.");
-                    return;
-            }
-        }
-        // Build patchers for serial-link systems (arms)
-        private void CreateNetworkComponents_Serial(NetworkInterface robotNI)
-        {
-            /*
-             * This function creates the parameter-listeners for a serial 
-             * robot using the network-interface with a given network type.
-             */
-
-            robotNI.CreateSerialRobotPatches();
-        }
-        // Build interfaces for mobile robots
-        private void CreateNetworkComponents_Mobile(NetworkInterface robotNI)
-        {
-            /*
-             * This function creates the parameter-listeners for a mobile 
-             * robot using the network-interface with a given network type.
-             */
-            robotNI.CreateMobileRobotPatches();
-        }
-        // Build listening interfaces for hybrid robots
-        private void CreateNetworkComponents_Other(NetworkInterface robotNI)
-        {
-            Debug.Log("[" + this.name + "] Not implimented.");
-        }
     }
 }
 

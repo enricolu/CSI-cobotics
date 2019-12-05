@@ -19,7 +19,7 @@ namespace CSI
         public string manufacturer = "Unassigned";
         
         // Internal references
-        private TwinType twinClass = TwinType.device;
+        private const TwinType twinClass = TwinType.device;
 
         /*
         // Before timeseries

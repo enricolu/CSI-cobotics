@@ -21,18 +21,14 @@ namespace CSI.User
         public handMode dominantHand = handMode.right;      // Average hand dominance
 
         // Internal references
-        private TwinType twinClass = TwinType.user;
+        private const TwinType twinClass = TwinType.user;
         // Model parameters
         private const float defaultHeight = 1.5f;
         private const float defaultWeight = 90;
 
-        // Before timeseries
-        void Awake()
-        {
-            // Scale the avatar geometry to the 'height' parameter
-            ScaleOperatorGeometry();
-        }
-
+        /*
+         * Component behaviours
+         */
         // Start is called before the first frame update
         void Start()
         {
@@ -61,6 +57,20 @@ namespace CSI.User
                 uScale * xScale,
                 uScale * yScale,
                 uScale * zScale);
+        }
+
+        /*
+         * Kinetic interface creation
+         */
+        // Create the interfaces necessary for emulation
+        private void CreateEmulationInterfaces()
+        {
+            Debug.LogError("[" + this.name + "] Has no emulated-twin interface.");
+        }
+        // Create the interfaces necessary for networking
+        private void CreteNetworkingInterfaces()
+        {
+            Debug.LogError("[" + this.name + "] Has no networked-twin interface.");
         }
     }
 }
