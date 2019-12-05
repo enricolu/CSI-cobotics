@@ -20,8 +20,11 @@ namespace CSI.User
         [Tooltip("Dominant hand for interactions.")]
         public handMode dominantHand = handMode.right;      // Average hand dominance
 
-        private float defaultHeight = 1.5f;
-        private float defaultWeight = 90;
+        // Internal references
+        private TwinType twinClass = TwinType.user;
+        // Model parameters
+        private const float defaultHeight = 1.5f;
+        private const float defaultWeight = 90;
 
         // Before timeseries
         void Awake()

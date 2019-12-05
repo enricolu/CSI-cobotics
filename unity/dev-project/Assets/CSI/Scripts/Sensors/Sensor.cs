@@ -14,43 +14,32 @@ namespace CSI.Sensors
         [Tooltip("Effective sensor range.")]
         public float range = 4.0f;
 
+        // Internal references
+        private TwinType twinClass = TwinType.sensor;
+
+        /*
+         * Component behaviours
+         */
         // Update is called once per frame
         void Update()
         {
             /*
              * This handles the update of the 'sensor' digital twins
              */
+            UpdateNetworkingBehaviour();
 
-            // Was the update successful (message placeholder)
-            bool isSuccessful = new bool();
+            Debug.Log("Type: " + twinClass.ToString());
 
-            switch (twinBehaviour)
-            {
-                case TwinMode.passive:
-                    // Do nothing..
-                    return;
-                case TwinMode.emulated:
-                    // Sensor is simulation only
-                    isSuccessful = EmulationUpdate(GetNI());
-
-                    return;
-
-                case TwinMode.networked:
-                    // Sensor is real and networked
-                    isSuccessful = NetworkedUpdate(GetNI());
-
-                    return;
-
-                default:
-                    Debug.Log("Twin mode not recognised for '" + name);
-                    return;
-            }
         }
-
         // Start is called before the first frame update
         void Start()
         {
 
+        }
+
+        void Setup()
+        {
+            //this.EntityClass = TwinClass.sensor;
         }
 
 

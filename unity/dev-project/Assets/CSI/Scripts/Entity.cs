@@ -8,7 +8,8 @@ namespace CSI
 {
     // Digital Twinning behaviours
     public enum TwinMode { passive, emulated, networked };
-
+    // Types of devices
+    public enum TwinType { none, device, user, sensor, robot};
     /*
      * Device description
      */
@@ -24,7 +25,10 @@ namespace CSI
 
         // Internal references
         private int id = 0;                                 // Unique reference
-
+        private TwinType twinClass = TwinType.none;
+        /*
+         * Component behaviours
+         */
         // Before timeseries
         void Awake()
         {
@@ -32,39 +36,71 @@ namespace CSI
             if (0 == id)
                 id = GetInstanceID();
 
-            // No further setup for passive objects
-            if (twinBehaviour != TwinMode.passive)
-                return;
-
             // Confirm the entity has a network interface
-            if (!HasNI())
-                Debug.LogError("[ERROR] Entity '" + name + "' has no network interface, please add and configure.");
+            if (!HasNetworkInterface() && twinBehaviour != TwinMode.passive)
+            {
+                Debug.LogError("[" + this.name + "] No network interface, please add and configure.");
+                twinBehaviour = TwinMode.passive;
                 return;
-
+            }
         }
-        
         // General update function
         void Update()
         {
-            Debug.Log("I '" + name + "' in " + twinBehaviour + " mode..");
+            Debug.Log("[" + this.name + "] in " + twinBehaviour + " mode..");
+            // Update behaviour if needed
+            if(HasNetworkInterface())
+                UpdateNetworkingBehaviour();
+
+            // No further action
         }
 
         /*
+         * General
+         */
+        // This function returns the twin class of the object
+        public TwinType GetTwinType()
+        {
+            return twinClass;
+        }
+        /*
          * Networking
          */
-        // Check a network-interface exists
-        public bool HasNI()
+        // Check for changes in networking settings
+        public void UpdateNetworkingBehaviour()
         {
-            if (GetNI() != null)
-                return true;
-            return false; 
-        }        
-        // Get the entities network interface
-        public NetworkInterface GetNI()
-        {
-            return this.gameObject.GetComponent<NetworkInterface>();
-        }
+            // Sanity check
+            NetworkInterface EntityNI = GetComponent<NetworkInterface>();
 
+            switch (twinBehaviour)
+            {
+                case TwinMode.passive:
+                    // Remove if present
+                    if (EntityNI.Exists())
+                        EntityNI.Remove();  // Remove any existing connection
+                    break;
+                case TwinMode.emulated:
+                    // Create if not present
+                    if (!EntityNI.Exists())
+                        EntityNI.New();     // Create a new connection
+                    break;
+                case TwinMode.networked:
+                    // Create if not present
+                    if (!EntityNI.Exists())
+                        EntityNI.New();     // Create a new connection
+                    break;
+                default:
+                    Debug.Log("[" + this.name + "] Twin mode not recognised");
+                    return;
+            }
+        }
+        // Check if the network interface exists
+        public bool HasNetworkInterface()
+        {
+            if (null != GetComponent<NetworkInterface>())
+                return true;
+            return false;
+        }
         /*
          * Heirarchy transversal
          */

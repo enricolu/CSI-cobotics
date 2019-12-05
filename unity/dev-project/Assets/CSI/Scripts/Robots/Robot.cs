@@ -6,7 +6,7 @@ using CSI;
 namespace CSI.Robot
 {
     // Robot kinematic types
-    public enum dynamics {serial, mobile, hybrid };
+    public enum dynamicMode {serial, mobile, other };
 
     public class Robot : Device
     {
@@ -14,78 +14,81 @@ namespace CSI.Robot
         [Header("Robot Parameters")]
         // Parameters
         [Tooltip("The robot kinematic types")]
-        public dynamics config = dynamics.serial;
-        // [Tooltip("")]
+        public dynamicMode dynamicBehaviour = dynamicMode.serial;
 
+        // Internal references
+        private TwinType twinClass = TwinType.robot;
 
-        private bool activeInterface = false;        
-
-        // Start is called before the first frame update
-        void OnAwake()
-        {
-
-        }
-
+        /*
+         * Component behaviours
+         */
         // Update is called once per frame
         void Update()
         {
-            /*
-             * This handles the update of the 'robot' digital twins
-             */
-            switch (twinBehaviour)
-            {
-                case TwinMode.passive:
+            // Confirm the objects connection status
+            UpdateNetworkingBehaviour();
 
-                    return;
-                case TwinMode.emulated:
-
-                    return;
-                case TwinMode.networked:
-
-                    return;
-                default:
-                    Debug.Log("Twin mode not recognised for '" + name);
-                    return;
-            }
-
-            // Get the general connection interface
-            NetworkInterface networkBridge = this.gameObject.GetComponent<NetworkInterface>();
-            
-            // Sanity check. has adapter and is not disabled 
-            if (networkBridge == null || !networkBridge.isActiveAndEnabled)
-                return;
-            // Check enabled controller
-            if (!networkBridge.isEnabled)
-                return;
-
-            // Create or destroy network bridge depending on selection
-            if (!activeInterface && networkBridge.IsConnected())
-            {
-                CreateIOComponents();
-                activeInterface = true;
-            }
-            else if (activeInterface && !networkBridge.IsConnected())
-            {
-                //DestroyInterface(type);
-                activeInterface = false;
-            }
+            //CreateNIinterfaces();
         }
+
+
 
         /*
          * Create the Robot patch interfaces
          */
-        private void CreateIOComponents()
+        private void Setup()
         {
-            switch (config)
+            //SetTwinClass(TwinClass.robot);
+        }
+        
+        
+        private void CreateNIinterfaces()
+        {
+            /*
+             * Assemble the interfaces for a given robot configuration
+             */
+
+            // Robot network interface
+            NetworkInterface robotNI = gameObject.GetComponent<NetworkInterface>();
+
+            switch (dynamicBehaviour)
             {
-                case (dynamics.serial):
-                    // Create the joint state mirror
-                    //this.gameObject.AddComponent<ROSConnector>();
+                case (dynamicMode.serial):
+                    CreateNetworkComponents_Serial(robotNI);
                     break;
+
+                case (dynamicMode.mobile):
+                    CreateNetworkComponents_Mobile(robotNI);
+                    break;
+
                 default:
-                    Debug.Log("Type " + config.ToString() + " not implemented yet.");
+                    Debug.LogError("[" + this.name + "] Dynamic configuration '" + dynamicBehaviour.ToString() + "' not recognised.");
                     return;
             }
+        }
+        // Build patchers for serial-link systems (arms)
+        private void CreateNetworkComponents_Serial(NetworkInterface robotNI)
+        {
+            /*
+             * This function creates the parameter-listeners for a serial 
+             * robot using the network-interface with a given network type.
+             */
+
+            robotNI.CreateSerialRobotPatches();
+        }
+        // Build interfaces for mobile robots
+        private void CreateNetworkComponents_Mobile(NetworkInterface robotNI)
+        {
+            /*
+             * This function creates the parameter-listeners for a mobile 
+             * robot using the network-interface with a given network type.
+             */
+            robotNI.CreateMobileRobotPatches();
+        }
+        // Build listening interfaces for hybrid robots
+        private void CreateNetworkComponents_Other(NetworkInterface robotNI)
+        {
+            Debug.Log("[" + this.name + "] Not implimented.");
         }
     }
 }

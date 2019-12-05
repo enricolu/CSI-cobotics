@@ -8,7 +8,7 @@ using CSI.ROS2;
 namespace CSI
 {
     // Communication types
-    public enum networkType { ROS, ROS2, TCP };
+    public enum networkType { ROS, ROS2, other };
 
     /*
      * 
@@ -30,75 +30,75 @@ namespace CSI
         [Tooltip("Network type ")]
         public networkType deviceNetwork = networkType.ROS;
 
-        [Tooltip("Enable Connection")]
-        public bool isEnabled = false;
+        // Private properties
+        private GameObject connection;
+        //private string connectionLabel = "Network Adapter";
 
-        // Internal logic
-        private bool activeConnection = false;
-
-        // Connect on awake
-        void Awake()
-        {
-
-        }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            
-        }
-
+        /*
+         * Component behaviours
+         */
         // Update is called once per frame
         void Update()
         {
-            CheckConnectionStatus();
+
         }
-        
+        // On component enable
+        void OnEnable()
+        {
+            Reset();
+        }
+        // On component disable
+        void OnDisable()
+        {
+            if (Exists())
+                Remove();
+        }
         // On NI destruction
         void OnDestroy()
         {
-            Disconnect();
+            if (Exists())
+                Remove();
         }
 
         /*
          * Connection properties
-         * 
          */
-        // Checks the interfaces for connection status changes
-        public void CheckConnectionStatus()
+        // Connection Disable/Enable 
+        public void EnableDisable()
         {
-            // Provide the new/reconnecting logic
-            if (isEnabled && !IsConnected())
-            {
-                Connect();
-                activeConnection = true;
-            }
-            else if (!isEnabled && IsConnected())
-            {
-                Disconnect();
-                activeConnection = false;
-            }
+            connection.SetActive(!connection.activeSelf);
+        }
+        // Confirm the adapter is enabled
+        public bool IsEnabled()
+        {
+            return connection.activeSelf;
         }
         // Connect to the selected network
-        public void Connect()
+        public void New()
         {
-            Debug.Log("Creating connector of type '" + deviceNetwork + "' for device '" + this.name + "'...");
-            
+            // For clarity
+            Debug.Log("[" + this.name + "] Creating '" + deviceNetwork + "' adapter.");
+            // Reset any existing connection object
+            Create();
             // Run the connection protocol for the selected method
             switch (deviceNetwork)
             {
+                // Create ROS adapter
                 case networkType.ROS:
-                    ROSInterface ROSbridge = this.gameObject.AddComponent<ROSInterface>();
-                    ROSbridge.Connect(deviceAddress, devicePort, deviceTimeOut);
-
+                    connection.AddComponent(typeof(ROSInterface));
+                    // Create bridge to ROS network
+                    //ROS_NI.Connect(deviceAddress, devicePort, deviceTimeOut);
                     break;
+
+                // Create ROS2 adapter
                 case networkType.ROS2:
-                    ROS2Interface ROS2bridge = this.gameObject.AddComponent<ROS2Interface>();
-                    ROS2bridge.Connect(deviceAddress, devicePort, deviceTimeOut);
+                    connection.AddComponent(typeof(ROS2Interface));
+                    //ROS2_NI.Connect(deviceAddress, devicePort, deviceTimeOut);
                     break;
 
-                case networkType.TCP:
-                    Debug.Log(".. To be implimented.");
+                // Create ROS adapter
+                case networkType.other:
+                    Debug.Log("[" + this.name + "] .. to be implimented.");
                     break;
 
                 default:
@@ -107,18 +107,77 @@ namespace CSI
             }
             //Debug.Log("...connection created.");
         }
-        // Disconnect from the selected network
-        public void Disconnect()
+        // Reset connection object
+        public void Reset()
         {
-            Debug.Log("Destroying '" + deviceNetwork + "' connection on device '" + this.name + "'...");
-            // Destroy the connections
-            Destroy(this.gameObject.GetComponent<ROSInterface>());
-            Destroy(this.gameObject.GetComponent<ROS2Interface>());
+            // Remove connection object
+            if (Exists())
+            {
+                Remove();
+            }
+            // Create new connection
+            New();
+        }
+        // Create new blank connection object
+        private void Create()
+        {
+            // Reset any existing connection object
+            connection = new GameObject(deviceNetwork + " Adapter");
+            connection.transform.SetParent(this.transform);
+            connection.transform.localPosition = new Vector3(0, 0, 0);
+            connection.tag = "Network";
         }        
-        // Check if the connection is active
-        public bool IsConnected()
+        // Remove connection object
+        public void Remove()
+        {            
+            // Destroy the connections
+            Destroy(connection);
+            // For clarity
+            Debug.Log("[" + this.name + "] Removing '"+ connection.name);
+        }        
+        // Check the NI has a connection object
+        public bool Exists()
         {
-            return activeConnection;
+            // If the internal reference is empty
+            if (null == connection)
+                return false;
+            if (!connection.transform.IsChildOf(this.transform))
+                return false;
+            return true;
+        }
+        /*
+         * Patch-through creation
+         */
+        // Create new serial patches, dependant on network-type
+        public void CreateSerialRobotPatches()
+        {
+            switch (deviceNetwork)
+            {
+                case networkType.ROS:
+                    ROSInterface ROSbridge = GetComponent<ROSInterface>();
+                    ROSbridge.CreateIOPatches_SerialRobot();
+                    return;
+
+                case networkType.ROS2:
+                    ROS2Interface ROS2bridge = GetComponent<ROS2Interface>();
+                    //ROS2bridge.CreateIOPatches_SerialRobot();
+                    return;
+
+                case networkType.other:
+                    Debug.Log("[" + this.name + "] '" + deviceNetwork + " not yet implimented.");
+
+                    return;
+
+                default:
+                    Debug.LogError("[" + this.name + "] Unable to create device patches for network type '" + deviceNetwork + "'");
+                    return;
+            }
+
+        }
+        // Create new serial patches, dependant on network-type
+        public void CreateMobileRobotPatches()
+        {
+
         }
     }
 }

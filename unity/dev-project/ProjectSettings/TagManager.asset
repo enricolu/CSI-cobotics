@@ -5,9 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - sensor
-  - manipulator
   - device
-  - ROSBridge
   - user
   layers:
   - Default

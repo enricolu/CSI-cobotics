@@ -815,7 +815,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 982091132}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27112c9e17d4858459fff0396ad94dfe, type: 3}
   m_Name: 
@@ -824,7 +824,6 @@ MonoBehaviour:
   devicePort: 9090
   deviceTimeOut: 10
   deviceNetwork: 0
-  isEnabled: 0
 --- !u!1001 &987102237
 PrefabInstance:
   m_ObjectHideFlags: 0
