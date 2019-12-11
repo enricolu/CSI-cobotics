@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 1634390052437123122}
   m_Layer: 0
   m_Name: wrist_1_link
-  m_TagString: Robot
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -414,7 +414,7 @@ GameObject:
   - component: {fileID: 4945134935009257383}
   m_Layer: 0
   m_Name: forearm_link
-  m_TagString: Robot
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -915,7 +915,7 @@ GameObject:
   - component: {fileID: 1860791966135463374}
   m_Layer: 0
   m_Name: ee_link
-  m_TagString: Robot
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1025,7 +1025,7 @@ GameObject:
   - component: {fileID: 1161837357023884023}
   m_Layer: 0
   m_Name: shoulder_link
-  m_TagString: Robot
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1170,7 +1170,7 @@ GameObject:
   - component: {fileID: 7424299146630843397}
   m_Layer: 0
   m_Name: tool0
-  m_TagString: Robot
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1221,7 +1221,7 @@ GameObject:
   - component: {fileID: 4346319428270876397}
   m_Layer: 0
   m_Name: wrist_3_link
-  m_TagString: Robot
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1413,7 +1413,7 @@ GameObject:
   - component: {fileID: 5864380310476965085}
   m_Layer: 0
   m_Name: ur3
-  m_TagString: Robot
+  m_TagString: robot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1460,10 +1460,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   name: UR3 Robotic Arm
+  twinBehaviour: 0
   model: UR3
   manufacturer: Universal Robotics
-  dof: 7
-  RMSErrorTolerance: 5
 --- !u!114 &5864380310476965085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1480,7 +1479,6 @@ MonoBehaviour:
   devicePort: 9090
   deviceTimeOut: 10
   deviceNetwork: 0
-  isEnabled: 1
 --- !u!1 &2938040467011872226
 GameObject:
   m_ObjectHideFlags: 0
@@ -1686,7 +1684,7 @@ GameObject:
   - component: {fileID: 5676528476824119839}
   m_Layer: 0
   m_Name: base_link
-  m_TagString: Robot
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2214,7 +2212,7 @@ GameObject:
   - component: {fileID: 6975294323599589168}
   m_Layer: 0
   m_Name: upper_arm_link
-  m_TagString: Robot
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2511,7 +2509,7 @@ GameObject:
   - component: {fileID: 4488570757149879311}
   m_Layer: 0
   m_Name: wrist_2_link
-  m_TagString: Robot
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3118,7 +3116,7 @@ GameObject:
   - component: {fileID: 371683589827070026}
   m_Layer: 0
   m_Name: world
-  m_TagString: Robot
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

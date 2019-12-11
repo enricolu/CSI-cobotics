@@ -411,10 +411,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   name: Xbox 360 Kinect
+  id: 0
   twinBehaviour: 0
   model: Version Two
   manufacturer: Microsoft
-  range: 4
+  targetCamera: {fileID: 6910237193541837468}
+  widthResolution: 640
+  heightResolution: 480
 --- !u!21 &531842005409839311
 Material:
   serializedVersion: 6

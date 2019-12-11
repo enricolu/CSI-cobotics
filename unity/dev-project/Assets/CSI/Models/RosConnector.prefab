@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Timeout: 10
+  Serializer: 0
   Protocol: 0
   RosBridgeServerUrl: ws://192.168.56.102:9090
 --- !u!114 &6048659359958540788

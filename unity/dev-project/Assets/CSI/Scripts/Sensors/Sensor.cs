@@ -11,11 +11,9 @@ namespace CSI.Sensors
         // General sensing parameters
         [Header("Sensing Parameters")]
 
-        [Tooltip("Effective sensor range.")]
-        public float range = 4.0f;
-
         // Internal references
         private const TwinType twinClass = TwinType.sensor;
+
 
         /*
          * Component behaviours
@@ -26,39 +24,12 @@ namespace CSI.Sensors
             /*
              * This handles the update of the 'sensor' digital twins
              */
-            UpdateTwinBehaviour();
 
-            Debug.Log("Type: " + twinClass.ToString());
+            // Detect if the twin behaviour has changed
+            UpdateTwinBehaviour(); // Look for changes in the twin-behaviour
 
-        }
-        // Start is called before the first frame update
-        void Start()
-        {
+            // Sensor update procedure...
 
-        }
-
-        void Setup()
-        {
-            //this.EntityClass = TwinClass.sensor;
-        }
-
-
-        /*
-         * Networked sensor methods
-         */
-        private bool NetworkedUpdate(NetworkInterface sensorNI)
-        {
-            Debug.Log("Sensor:'" + name + "' updating in network mode..");
-            return true;
-        }
-
-        /*
-         * Emulated sensor methods
-         */
-        private bool EmulationUpdate(NetworkInterface sensorNI)
-        {
-            Debug.Log("Sensor:'" + name + "' updating in locally emulated mode..");
-            return true;
         }
     }
 }

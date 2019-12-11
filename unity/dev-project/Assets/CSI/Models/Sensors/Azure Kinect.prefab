@@ -380,10 +380,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   name: Azure Kinect
+  id: 0
   twinBehaviour: 0
   model: Azure 2.0
   manufacturer: Microsoft
-  range: 4
+  targetCamera: {fileID: 3734607598662691230}
+  widthResolution: 640
+  heightResolution: 480
 --- !u!1 &3717876817721063846
 GameObject:
   m_ObjectHideFlags: 0

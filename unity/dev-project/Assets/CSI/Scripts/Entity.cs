@@ -7,7 +7,7 @@ using CSI;
 namespace CSI
 {
     // Digital Twinning behaviours
-    public enum TwinMode { passive, emulated, networked };
+    public enum TwinMode { disabled, emulated, networked };
     // Types of devices
     public enum TwinType { none, device, user, sensor, robot};
     /*
@@ -20,12 +20,13 @@ namespace CSI
         [Header("General Parameters")]
         [Tooltip("Arbritrary designation")]
         public string name = "Unassigned";
-        [Tooltip("Digital twinning mode; is the device real, emulated or passive?")]
-        public TwinMode twinBehaviour = TwinMode.passive;   // Does not transmit or recieve data
-
+        [Tooltip("A unique object reference")]
+        public int id = 0;                                   // Unique reference
+        [Tooltip("Digital twinning mode; is the device real, emulated or disabled?")]
+        public TwinMode twinBehaviour = TwinMode.disabled;   // Does not transmit or recieve data
+        
         // Internal references
-        private int id = 0;                                 // Unique reference
-        private TwinMode priorBehaviour = TwinMode.passive; // Memory of previous mode
+        private TwinMode priorBehaviour = TwinMode.disabled; // Memory of previous mode
         private const TwinType twinClass = TwinType.none;
 
         /*
@@ -37,33 +38,20 @@ namespace CSI
             // If not provided with an ID, assign unique ID
             if (0 == id)
                 id = GetInstanceID();
+            
+            if (TwinMode.disabled != twinBehaviour && !HasNetworkInterface())
+            {
+                Debug.LogError("[" + this.name + "] Object has no network interface, please add one.");
+            }
+            // Preliminary NI update
+            UpdateNetworkInterface(twinBehaviour);
         }
         // General update function
         void Update()
         {
-            Debug.Log("[" + this.name + "] in " + twinBehaviour + " mode..");
-
-            // Confirm the entity has a network interface
-            if (!HasNetworkInterface() && twinBehaviour != TwinMode.passive)
-            {
-                Debug.LogError("[" + this.name + "] No network interface, please add and configure.");
-                twinBehaviour = TwinMode.passive;
-                return;
-            }
-
-            // Check if the "Twin behaviour" has changed and create and new interfaces
-            UpdateTwinBehaviour();
-        }
-
-        /*
-         * Networking
-         */
-        // Check if the network interface exists
-        public bool HasNetworkInterface()
-        {
-            if (null != GetComponent<NetworkInterface>())
-                return true;
-            return false;
+            Debug.Log("[" + this.name + "] in " + twinBehaviour + " mode..");    
+            // Detect if the behaviour has changed
+            UpdateTwinBehaviour(); // Look for changes in the twin-behaviour
         }
 
         /*
@@ -72,71 +60,95 @@ namespace CSI
         // Update procedure for twin interfaces
         public void UpdateTwinBehaviour()
         {
-            // Detect if the behaviour has changed
+            // Sanity check
             if (twinBehaviour == priorBehaviour)
                 return;
 
-            // ======= Behaviour has changed ======
-            if (twinBehaviour == TwinMode.passive)              // To an inactive status
+            // Update the network interfaces 
+            UpdateNetworkInterface(twinBehaviour);
+
+            // Update interfaces             
+            switch (twinBehaviour)
             {
-                // Remove connection object if present
-                if (GetComponent<NetworkInterface>().Exists())
-                {
-                    GetComponent<NetworkInterface>().Remove();  // Remove any existing connection
-                }
                 // Destroy twin interface components
-                DestroyTwinInterface();  
-            }            
-            else if (priorBehaviour == TwinMode.passive)        // From inactive status
-            {
-                // Create new connection object if not present
-                if (!GetComponent<NetworkInterface>().Exists())
-                {
-                    GetComponent<NetworkInterface>().New();     // Create a new connection
-                }
-                // Create a new twin interface using the network interface
-                CreateTwinInterface();
+                case TwinMode.disabled:
+                    break;
+                case TwinMode.emulated:  
+                    CreateTwinInterface_emulated();
+                    break;
+                case TwinMode.networked:
+                    CreateTwinInterface_networked();
+                    break;
+                default:
+                    Debug.Log("[" + this.name + "] Unable to generate twin interface: unknown twin-mode.");
+                    return;
             }
+
             // Define the previous behaviour as the new behaviour
             priorBehaviour = twinBehaviour;
         }
-        // Create the interfaces depending on twin type
-        private void CreateTwinInterface()
-        {            
-            switch (twinBehaviour)
-            {
-                case TwinMode.passive:
-                    return;
-                case TwinMode.emulated:
-                    CreateEmulationInterface();
-                    return;
-                case TwinMode.networked:
-                    CreateNetworkingInterface();
-                    return;
-                default:
-                    Debug.Log("[" + this.name + "] Unable to generate twin interfaces: unknown twin-mode.");
-                    return;
-            }
-        }
-        // Create the interfaces depending on twin type
-        private void DestroyTwinInterface()
+        // Create the interfaces necessary for emulation
+        public virtual void CreateTwinInterface_emulated()
         {
-
+            Debug.LogError("[" + this.name + "] Has no emulated-twin interface.");
+            // Reset the behaviour
+            twinBehaviour = TwinMode.disabled;
+        }
+        // Create the interfaces necessary for networking
+        public virtual void CreateTwinInterface_networked()
+        {
+            Debug.LogError("[" + this.name + "] Has no networked-twin interface.");
+            // Reset the behaviour
+            twinBehaviour = TwinMode.disabled;
         }
         // Get the objects twin class
         public TwinType GetTwinType()
         {
             return twinClass;
         }
-        // Create the interfaces necessary for emulation
-        private void CreateEmulationInterface()
+
+        /*
+         * Networking
+         */
+        // Update the network interface
+        private void UpdateNetworkInterface(TwinMode currentMode)
         {
-            Debug.LogError("[" + this.name + "] Has no emulated-twin interface.");
+            /*
+             * This function updates the network interface 
+             * based on the current twin mode
+             */
+            
+            // Attempt to get the network interface component
+            NetworkInterface NI = GetComponent<NetworkInterface>();
+
+            if(currentMode == TwinMode.disabled)
+            {
+                // If the NI exists 
+                if (HasNetworkInterface() && NI.enabled)
+                    NI.enabled = false;
+                return;
+            }
+
+            // ===== New networking behaviour ===== //
+
+            // Check if it has an NI
+            if (!HasNetworkInterface()) 
+            {
+                // None: create new
+                NI = this.gameObject.AddComponent<NetworkInterface>();  
+            }
+
+            // Clean the interfaces on the connection
+            NI.Reset();
+            // Existing: enable NI
+            NI.enabled = true;
         }
-        // Create the interfaces necessary for networking
-        private void CreateNetworkingInterface()
+        // Check if the network interface exists
+        public bool HasNetworkInterface()
         {
-            Debug.LogError("[" + this.name + "] Has no networked-twin interface.");
+            if (null != GetComponent<NetworkInterface>())
+                return true;
+            return false;
         }
 
         /*
@@ -156,6 +168,26 @@ namespace CSI
 
             // Else return the current member
             return member;
+        }
+        // Search children with tag
+        public List<Transform> FindChildWithTag(Transform member, string tagString)
+        {
+            // Create the container
+            List<Transform> candidates = new List<Transform>();
+            // For each child
+            for (int i = 0; i < member.childCount; i++)
+            {
+                Transform child = member.GetChild(i);
+                if (child.tag == tagString)
+                {
+                    candidates.Add(child.transform);
+                }
+                if (child.childCount > 0)
+                {
+                    FindChildWithTag(child, tagString);
+                }
+            }
+            return candidates;
         }
         // Search through parent transform for gameobject with tag
         public static void AssignTagToChildren(Transform parentT, string tagString)

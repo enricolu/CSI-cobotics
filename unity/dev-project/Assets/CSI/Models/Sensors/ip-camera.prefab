@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1886648832769251894}
   - component: {fileID: 804204205786064732}
   - component: {fileID: 5245362886980403584}
+  - component: {fileID: 7169807528504303699}
   m_Layer: 0
   m_Name: ip-camera
   m_TagString: sensor
@@ -63,10 +64,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   name: Generic IP Camera
+  id: 0
   twinBehaviour: 0
   model: Unassigned
   manufacturer: Unassigned
-  range: 4
+  targetCamera: {fileID: 8609109253957239769}
+  widthResolution: 640
+  heightResolution: 480
+--- !u!114 &7169807528504303699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892368493193527576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27112c9e17d4858459fff0396ad94dfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deviceAddress: 127.0.1.10
+  devicePort: 9090
+  deviceTimeOut: 10
+  deviceNetwork: 0
+  publishMessage: publisher-topic
+  subscribeMessage: subscriber-topic
 --- !u!1 &4373196969695708851
 GameObject:
   m_ObjectHideFlags: 0

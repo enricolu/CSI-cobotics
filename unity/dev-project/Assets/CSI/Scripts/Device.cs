@@ -20,25 +20,5 @@ namespace CSI
         
         // Internal references
         private const TwinType twinClass = TwinType.device;
-
-        /*
-        // Before timeseries
-        void Awake()
-        {
-
-        }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
-        */
     }
 }

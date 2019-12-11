@@ -23,21 +23,24 @@ namespace CSI.Robot
         // Update is called once per frame
         void Update()
         {
-            // Confirm the objects connection status
+            // Handle changes in network-mode
             UpdateTwinBehaviour();
-
         }
-
 
 
         /*
-         * Create the Robot patch interfaces
+         * Twinning interface creation
          */
-        private void Setup()
+        // Create the interfaces necessary for emulation
+        public override void CreateTwinInterface_emulated()
         {
-
+            Debug.LogError("[" + this.name + "] Has no emulated-twin interface.");
         }
-        
+        // Create the interfaces necessary for networking
+        public override void CreateTwinInterface_networked()
+        {
+            Debug.LogError("[" + this.name + "] Has no networked-twin interface.");
+        }
     }
 }
 

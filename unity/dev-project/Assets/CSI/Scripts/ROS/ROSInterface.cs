@@ -18,11 +18,14 @@ namespace CSI.ROS
         public string port { get; set; } 
         public int timeOut { get; set; }
 
-        private RS.RosConnector ROSbridge;
-
         /*
          * Component behaviours
          */
+
+        void OnAwake()
+        {
+
+        }
         // Start is called before the first frame update
         void Start()
         {
@@ -43,52 +46,44 @@ namespace CSI.ROS
          * Create connection object
          */
         // Create a connection to a ROS network
-        public void Connect(string deviceAddress, string devicePort, int deviceTimeOut)
+        public void Connect()
         {
-            // Allocate connection details locally
-            address = deviceAddress;
-            port    = devicePort;
-            timeOut = deviceTimeOut;
-            string deviceURL = "ws://" + address + ":" + port;      // Create the device URL
-
             // Create a ROS connector
-            ROSbridge = gameObject.AddComponent<RS.RosConnector>();
-            ROSbridge.RosBridgeServerUrl = deviceURL;
+            RS.RosConnector rosConnector = this.gameObject.AddComponent<RS.RosConnector>();
+            rosConnector.RosBridgeServerUrl = "ws://" + address.ToString() + ":" + port.ToString();
+            rosConnector.Timeout = timeOut;
         }
         // Remove the ROSbridge
         public void Disconnect()
         {
             //Debug.Log("[" + this.name+"] Destroying connection to" + this.gameObject.name + "@" + address + ":" + port);
             // Destroy the component
-            Destroy(ROSbridge);
-        }
-        /*
-         * Serial robot (arm) parameter bridges
-         */
-        // Create a ROS-specific IO bridge for a serial robot
-        public void CreateIOPatches_SerialRobot()
-        {
-            //this.gameObject.AddComponent<>();
-        }
-        // Create a ROS-specific IO bridge for a mobile robot 
-        public void DestoryIOPatches_SerialRobot()
-        {
-            //this.gameObject.AddComponent<>();
+            this.enabled = false;
         }
 
         /*
-         * Mobile robot (rover) Parameter bridges
+         * Create different data transfer patches
          */
-        // Create a ROS-specific IO bridge for a serial robot
-        public void CreateIOPatches_MobileRobot()
+        // Create image publisher
+        public void CreateImagePublisher(Camera targetCamera, string topic, int resolutionWidth, int resolutionHeight)
         {
+            // Create the image publisher component
+            RS.ImagePublisher publisher = this.gameObject.AddComponent<RS.ImagePublisher>();
+            // Parameterise the publisher
+            publisher.ImageCamera = targetCamera;
+            publisher.resolutionWidth = resolutionWidth;
+            publisher.resolutionHeight = resolutionHeight;
+            publisher.FrameId = this.name;
+            publisher.Topic = topic;
 
         }
-        // Create a ROS-specific IO bridge for a mobile robot 
-        public void DestoryIOPatches_MobileRobot()
+        // Create image subscribe
+        public void CreateImageSubscriber(Camera targetCamera, string topic)
         {
-
+            // Create the image subscriber component
+            RS.ImageSubscriber subscriber = this.gameObject.AddComponent<RS.ImageSubscriber>();
+            // Parameterise the subscriber
+            subscriber.Topic = topic;
         }
-
     }
 }

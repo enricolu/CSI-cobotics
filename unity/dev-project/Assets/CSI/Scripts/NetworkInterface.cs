@@ -30,34 +30,37 @@ namespace CSI
         [Tooltip("Network type ")]
         public networkType deviceNetwork = networkType.ROS;
 
+        [Header("Message Labels")]
+        [Tooltip("Broadcast message label")]
+        public string publishMessage = "publisher-topic";
+        [Tooltip("Recieve message label")]
+        public string subscribeMessage = "subscriber-topic";
+
         // Private properties
         private GameObject connection;
-        //private string connectionLabel = "Network Adapter";
 
         /*
          * Component behaviours
          */
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
         // On component enable
         void OnEnable()
-        {
+        {   
             Reset();
+            Debug.Log("[" + this.name + "] Network interface enabled.");
         }
         // On component disable
         void OnDisable()
         {
             if (Exists())
                 Remove();
+            Debug.Log("[" + this.name + "] Network interface disabled.");
         }
         // On NI destruction
         void OnDestroy()
         {
             if (Exists())
                 Remove();
+            Debug.Log("[" + this.name + "] Network interface removed.");
         }
 
         /*
@@ -76,8 +79,7 @@ namespace CSI
         // Connect to the selected network
         public void New()
         {
-            // For clarity
-            Debug.Log("[" + this.name + "] Creating '" + deviceNetwork + "' adapter.");
+
             // Reset any existing connection object
             Create();
             // Run the connection protocol for the selected method
@@ -85,27 +87,28 @@ namespace CSI
             {
                 // Create ROS adapter
                 case networkType.ROS:
-                    connection.AddComponent(typeof(ROSInterface));
                     // Create bridge to ROS network
-                    //ROS_NI.Connect(deviceAddress, devicePort, deviceTimeOut);
+                    ROSInterface RI = connection.AddComponent<ROSInterface>();
+                    // Parameterise
+                    RI.address = deviceAddress;
+                    RI.port = devicePort;
+                    RI.timeOut = deviceTimeOut;
+                    // Connect to the ROS network
+                    RI.Connect();
                     break;
 
                 // Create ROS2 adapter
                 case networkType.ROS2:
+                    // Create bridge to ROS2 network
                     connection.AddComponent(typeof(ROS2Interface));
-                    //ROS2_NI.Connect(deviceAddress, devicePort, deviceTimeOut);
                     break;
 
-                // Create ROS adapter
-                case networkType.other:
-                    Debug.Log("[" + this.name + "] .. to be implimented.");
-                    break;
-
+                // Alternative adapters
                 default:
-                    Debug.Log("Connection type not recognised.");
+                    Debug.LogError("[" + this.name + "] .. to be implimented.");
                     return;
             }
-            //Debug.Log("...connection created.");
+            //Debug.Log("[" + this.name + "] Created '" + deviceNetwork + "' adapter.");       
         }
         // Reset connection object
         public void Reset()
@@ -125,15 +128,13 @@ namespace CSI
             connection = new GameObject(deviceNetwork + " Adapter");
             connection.transform.SetParent(this.transform);
             connection.transform.localPosition = new Vector3(0, 0, 0);
-            connection.tag = "Network";
+            connection.tag = "network";
         }        
         // Remove connection object
         public void Remove()
         {            
             // Destroy the connections
             Destroy(connection);
-            // For clarity
-            Debug.Log("[" + this.name + "] Removing '"+ connection.name);
         }        
         // Check the NI has a connection object
         public bool Exists()
@@ -147,38 +148,49 @@ namespace CSI
         }
 
         /*
-         * Patch-through creation
-         */
-        // Create new serial patches, dependant on network-type
-        public void CreateSerialRobotPatches()
+         * Twin Network Interfaces
+         * - All devices should never see ROS or ROS2
+         * - 
+         * 
+        */
+        // Generic image publisher creation
+        public void CreateImagePublisher(Camera targetCamera, int resolutionWidth, int resolutionHeight)
         {
             switch (deviceNetwork)
             {
                 case networkType.ROS:
-                    ROSInterface ROSbridge = GetComponent<ROSInterface>();
-                    ROSbridge.CreateIOPatches_SerialRobot();
-                    return;
+                    // Get the ROS-bridge
+                    ROSInterface ROSbridge = connection.GetComponent<ROSInterface>();
 
-                case networkType.ROS2:
-                    ROS2Interface ROS2bridge = GetComponent<ROS2Interface>();
-                    //ROS2bridge.CreateIOPatches_SerialRobot();
-                    return;
-
-                case networkType.other:
-                    Debug.Log("[" + this.name + "] '" + deviceNetwork + " not yet implimented.");
-
+                    // Define the ROS topic
+                    string ROStopic = this.name + "/" + publishMessage;
+                    // Create the publisher
+                    ROSbridge.CreateImagePublisher(targetCamera, ROStopic, resolutionWidth, resolutionHeight);
                     return;
 
                 default:
-                    Debug.LogError("[" + this.name + "] Unable to create device patches for network type '" + deviceNetwork + "'");
+                    Debug.LogError("[" + this.name + "] Interface not yet implemented for network type '" + deviceNetwork + "'");
                     return;
             }
-
         }
-        // Create new serial patches, dependant on network-type
-        public void CreateMobileRobotPatches()
+        // Generic image subscriber creation
+        public void CreateImageSubscriber(Camera targetCamera)
         {
+            switch (deviceNetwork)
+            {
+                case networkType.ROS:
+                    // Get the ROS-bridge
+                    ROSInterface ROSbridge = connection.GetComponent<ROSInterface>();
+                    // Define the ROS topic
+                    string ROStopic = this.name + "/" + subscribeMessage;
+                    // Create the publisher
+                    ROSbridge.CreateImageSubscriber(targetCamera, ROStopic);
+                    return;
 
+                default:
+                    Debug.LogError("[" + this.name + "] Interface not yet implemented for network type '" + deviceNetwork + "'");
+                    return;
+            }
         }
     }
 }

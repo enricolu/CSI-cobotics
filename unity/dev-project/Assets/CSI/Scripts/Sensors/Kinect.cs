@@ -8,7 +8,7 @@ namespace CSI.Sensors
     /*
      * The behaviour defining the Kinetic sensor
      */
-    public class Kinect : Sensor
+    public class Kinect : WebCamera
     {
 
         /*
@@ -22,21 +22,28 @@ namespace CSI.Sensors
         // Update is called once per frame
         void Update()
         {
+            // Handle changes in network-mode
+            UpdateTwinBehaviour();
 
+            // Kinect behaviours....
         }
 
         /*
-         * Kinetic interface creation
+         * Twinning interface creation
          */
         // Create the interfaces necessary for emulation
-        public void CreateEmulationInterfaces()
+        public override void CreateTwinInterface_emulated()
         {
-
+            Debug.Log("[" + this.name + "] Creating emulated-twin interface.");
+            // Get the NI
+            NetworkInterface NI = this.gameObject.GetComponent<NetworkInterface>();
         }
         // Create the interfaces necessary for networking
-        public void CreteNetworkingInterfaces()
+        public override void CreateTwinInterface_networked()
         {
-
+            Debug.Log("[" + this.name + "] Creating networked-twin interface.");
+            // Get the NI
+            NetworkInterface NI = this.gameObject.GetComponent<NetworkInterface>();
         }
     }
 }
