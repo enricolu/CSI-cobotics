@@ -1,0 +1,26 @@
+<package>
+  <name>csi</name>
+  <version>1.1.1</version>
+  <description>
+Unity interface for csi-cobotics components and packages. Including drivers, descriptions, and utilities for components visualised in the unity environment.
+  </description>
+
+  <author>James Douthwaite</author>
+  <author>Jonathan Aitken</author>
+  <author>James Law</author>
+  <maintainer email="douthwaiteja@gmail.com">James A. Douthwaite</maintainer>
+  <maintainer email="jonathan.aitken@sheffield.ac.uk">Jonathan Aitken</maintainer>
+
+  <license>GNU</license>
+
+  <!--<url type="website">https://github.com/douthwja01/CSI-cobotics</url>-->
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>csi_kuka</run_depend>
+  <run_depend>csi_ur</run_depend>
+  <run_depend>csi_kinect</run_depend>
+
+  <export>  
+	<!-- <metapackage/> -->
+  </export> 
+</package>

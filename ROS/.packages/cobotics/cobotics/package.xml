@@ -18,6 +18,7 @@ Unity interface for robotics components and packages. Including drivers, descrip
   <buildtool_depend>catkin</buildtool_depend>
   <run_depend>cobotics_kuka</run_depend>
   <run_depend>cobotics_ur</run_depend>
+  <run_depend>cobotics_kinect</run_depend>
 
   <export>  
 	<!-- <metapackage/> -->

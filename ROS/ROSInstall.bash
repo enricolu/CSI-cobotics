@@ -4,21 +4,16 @@
 # to allow the installation of new packages and modification of
 # system files.
 
-<<<<<<< HEAD
-=======
 # If this fails, it is likely due to network settings. for VMs, bridge adapters 
 # often cause complications, consider using NAT networks.
 
->>>>>>> master
 DISTRO="kinetic"
 
 echo "Updating apt sources..."
 sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-<<<<<<< HEAD
+
 apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
-=======
-sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
->>>>>>> master
+
 echo "Preliminary update..."
 apt-key update -y
 apt-get update -y
@@ -44,11 +39,9 @@ source /opt/ros/${DISTRO}/setup.bash
 echo "Building catkin workspace..."
 mkdir -p ~/catkin_ws/src
 echo "Modifying ownerships"
-<<<<<<< HEAD
-chown ${SUDO_USER} ~/catkin_ws -R
-=======
+
 chown ${SUDO_USER}:${SUDO_USER} ~/catkin_ws -R
->>>>>>> master
+
 cd ~/catkin_ws/
 echo "Initial catkin build..."
 catkin_make
@@ -80,11 +73,7 @@ echo "==========================="
 echo "ROS version:"
 rosversion -d
 
-<<<<<<< HEAD
-
-=======
 echo "==> reboot when ready"
->>>>>>> master
 
 # GAZEBO FIX namespace timeout
 #http://answers.gazebosim.org/question/12998/warning-waited-one-second-for-namespaces/
